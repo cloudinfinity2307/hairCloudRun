@@ -15,10 +15,7 @@ steps:
   args:
   - '-c'
   - |
-      gcloud deploy apply \
-        --file=clouddeploy.yaml \
-        --region=${_LOCATION} \
-        --project=$PROJECT_ID
+      gcloud deploy apply --file=clouddeploy.yaml --region=${_LOCATION} --project=$PROJECT_ID
 
 
 - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
