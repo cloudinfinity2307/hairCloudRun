@@ -7,3 +7,5 @@ spec:
     spec:
       containers:
       - image: app
+        ports:
+        - containerPort: 80
