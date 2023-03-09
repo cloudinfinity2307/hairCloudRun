@@ -22,7 +22,7 @@ steps:
   args: 
       [
         "deploy", "releases", "create", "release-$SHORT_SHA",
-        "--delivery-pipeline", "cloud-run-pipeline",
+        "--delivery-pipeline", "pipeline",
         "--region", "${_LOCATION}",
         "--images", "app=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA"
       ]
