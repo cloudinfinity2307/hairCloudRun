@@ -9,6 +9,18 @@ steps:
   name: 'gcr.io/cloud-builders/docker:latest'
   args: ['push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA']
 
+- id: 'Cloud Deploy'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - |
+      gcloud deploy apply \
+        --file=clouddeploy.yaml \
+        --region=${_LOCATION} \
+        --project=$PROJECT_ID
+
+
 - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
   args: 
       [
