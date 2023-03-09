@@ -17,8 +17,8 @@ steps:
   - |
     gcloud run deploy ${_SERVICE}\
       --region ${_LOCATION}\
-      --image '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA' \
-      --allow-unauthenticated \
+      --image '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA'\
+      --allow-unauthenticated\
       --port 80
 images:
 - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA'
