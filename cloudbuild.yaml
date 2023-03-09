@@ -9,16 +9,14 @@ steps:
   name: 'gcr.io/cloud-builders/docker:latest'
   args: ['push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA']
 
-- id: 'Deploy to Cloud Run'
-  name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: /bin/bash
-  args:
-  - '-c'
-  - |
-    gcloud run deploy ${_SERVICE}\
-      --region ${_LOCATION}\
-      --image '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA'\
-      --allow-unauthenticated\
-      --port 80
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+  args: 
+      [
+        "deploy", "releases", "create", "release-$SHORT_SHA",
+        "--delivery-pipeline", "cloud-run-pipeline",
+        "--region", "${_LOCATION}",
+        "--images", "app=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA"
+      ]
+  entrypoint: gcloud
 images:
 - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA'
