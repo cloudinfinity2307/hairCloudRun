@@ -1,0 +1,26 @@
+steps:
+
+- id: 'Build Container Image'
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t' ,'${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA' , '-f' , 'Dockerfile' , '.' ]
+  dir: "helloworld"
+  
+- id: 'Push Container Image SHORT_SHA'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  args: ['push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA']
+
+- id: 'Deploy to Cloud Run'
+  name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - |
+    gcloud run deploy ${_SERVICE}\
+      --region ${_LOCATION}\
+      --image '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:latest' \
+      --allow-unauthenticated \
+      --port 80
+  dir:  ${_WORK_DIRECTORY}
+images:
+- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:latest'
+- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY_NAME}/${_IMAGE_NAME}:$SHORT_SHA'
